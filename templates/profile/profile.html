@@ -1,16 +1,33 @@
 <!DOCTYPE html>
-<html>
-    <head><title>Профіль</title></head>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профіль користувача - {{ user_profile.username }}</title>
+</head>
 <body>
-    <h2>Привіт, {{ user.username }}</h2>
-    <p>Ваша роль: {{ user.get_role_display }}</p>
+    <header>
+        <h1>Профіль користувача: {{ user_profile.username }}</h1>
+        {% if is_own_profile %}
+            <a href="{% url 'accounts:edit-profile' %}">Редагувати профіль</a>
+        {% endif %}
+    </header>
 
-    {% if user.role == 'moderator' %}
-        <p><a href="{% url 'moderator' %}">Сторінка модератора</a></p>
-    {% elif user.role == 'admin' %}
-        <p><a href="{% url 'admin_area' %}">Сторінка адміністратора</a></p>
-    {% endif %}
+    <main>
+        <section>
+            <h2>Дані профілю</h2>
+            <p><strong>Ім'я користувача:</strong> {{ user_profile.username }}</p>
+            <p><strong>Email:</strong> {{ user_profile.email }}</p>
+            {% if user_profile.avatar %}
+                <p><strong>Аватар:</strong><br><img src="{{ user_profile.avatar.url }}" alt="Avatar" width="150"></p>
+            {% else %}
+                <p>Аватар не завантажено</p>
+            {% endif %}
+        </section>
+    </main>
 
-    <p><a href="{% url 'logout' %}">Вийти</a></p>
+    <footer>
+        <p>&copy; 2025 Всі права захищено</p>
+    </footer>
 </body>
 </html>

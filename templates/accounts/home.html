@@ -16,7 +16,17 @@
         <nav>
             {% if user.is_authenticated %}
                 <ul>
-                    <li><a href="{% url 'accounts:logout' %}">Вийти</a></li>
+                    <li>
+                        <form method="post" action="{% url 'accounts:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit">Вийти</button>
+                        </form>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:user-profile' username=user.username %}">
+                            <button>Перейти до акаунту</button>
+                        </a>
+                    </li>
                 </ul>
             {% else %}
                 <ul>

@@ -14,6 +14,7 @@ class CustomUser(AbstractUser):
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=USER)
     bio = models.TextField(blank=True, null=True)
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True)
 
     def is_user(self):
         return self.role == self.USER

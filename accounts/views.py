@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
+from .models import CustomUser
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -17,21 +19,27 @@ def register_view(request):
         form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
-@login_required
-def profile_view(request):
-    return render(request, 'profile.html')
 
 @login_required
-def moderator_view(request):
-    if request.user.role != 'moderator':
-        raise PermissionDenied
-    return render(request, 'moderator.html')
+def user_profile_view(request, username):
+    user_profile = get_object_or_404(CustomUser, username=username)
+    return render(request, 'profile/profile.html', {
+        'user_profile': user_profile,
+        'is_own_profile': user_profile == request.user,
+    })
+
 
 @login_required
-def admin_view(request):
-    if request.user.role != 'admin':
-        raise PermissionDenied
-    return render(request, 'admin.html')
+def edit_profile_view(request):
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:user-profile', username=request.user.username)
+    else:
+        form = ProfileUpdateForm(instance=request.user)
+    return render(request, 'profile/edit_profile.html', {'form': form})
+
 
 def home_view(request):
     return render(request, 'accounts/home.html')
