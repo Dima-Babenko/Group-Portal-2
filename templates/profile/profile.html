@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head><title>Профіль</title></head>
+<body>
+    <h2>Привіт, {{ user.username }}</h2>
+    <p>Ваша роль: {{ user.get_role_display }}</p>
+
+    {% if user.role == 'moderator' %}
+        <p><a href="{% url 'moderator' %}">Сторінка модератора</a></p>
+    {% elif user.role == 'admin' %}
+        <p><a href="{% url 'admin_area' %}">Сторінка адміністратора</a></p>
+    {% endif %}
+
+    <p><a href="{% url 'logout' %}">Вийти</a></p>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Головна сторінка</title>
+</head>
+<body>
+    <header>
+        {% if user.is_authenticated %}
+            <h1>Привіт, {{ user.username }}!</h1>
+        {% else %}
+            <h1>Вітаємо на головній сторінці</h1>
+        {% endif %}
+
+        <nav>
+            {% if user.is_authenticated %}
+                <ul>
+                    <li><a href="{% url 'accounts:logout' %}">Вийти</a></li>
+                </ul>
+            {% else %}
+                <ul>
+                    <li><a href="{% url 'accounts:login' %}">Увійти</a></li>
+                    <li><a href="{% url 'accounts:register' %}">Зареєструватися</a></li>
+                </ul>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Ось де можна знайти корисну інформацію!</h2>
+            <p>Це головна сторінка, де можна дізнатися останні новини.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Всі права захищено</p>
+    </footer>
+</body>
+</html>

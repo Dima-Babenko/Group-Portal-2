@@ -1,11 +1,15 @@
 from django.urls import path
-from accounts import views
-from config.urls import app_name
+from django.contrib.auth import views as auth_views
+from . import views
 
-app_name = "accounts"
+app_name = 'accounts'
 
 urlpatterns = [
-    path("registrate_page/", views.register, name="register"),
-    path("login_page/", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout")
+    path('register/', views.register_view, name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile/', views.profile_view, name='profile'),
+    path('moderator/', views.moderator_view, name='moderator'),
+    path('admin-area/', views.admin_view, name='admin_area'),
+    path('', views.home_view, name='home'),
 ]
