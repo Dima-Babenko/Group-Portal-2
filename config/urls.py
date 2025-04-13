@@ -24,5 +24,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('forum.urls', namespace='forum')),
     #path('accounts/', include('accounts.urls', namespace="accounts")),
-    path('forum/', include('forum.urls', namespace="forum")),
 ]
