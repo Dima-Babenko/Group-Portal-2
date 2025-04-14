@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+<div class="container mt-3">
+  <div class="row">
+    <!-- Левая часть: задание и форма добавления комментариев -->
+    <div class="col-md-6 d-flex flex-column">
+      <!-- Задание -->
+      <h2>{{ branch.title }}</h2>
+      <p>{{ branch.body }}</p>
+      <div class="d-flex">
+        <a href="{% url 'forum:branch_update' branch.id %}" class="btn btn-outline-warning me-2">Редагувати</a>
+        <a href="{% url 'forum:branch_delete' branch.id %}" class="btn btn-outline-danger">Bидaлити</a>
+      </div>
+
+      <!-- Форма добавления комментария -->
+      <div class="add-comment mt-4 p-3 border rounded bg-dark text-light" style="background: #f8f9fa;">
+        <h4>Додати коментар</h4>
+        <form action="{% url 'forum:branch_detail' branch.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group bg-dark text-light">
+            <label for="id_content">Коментар:</label>
+            <textarea name="content" id="id_content" class="form-control" rows="3" style="max-height: 100px; overflow-y: auto;"></textarea>
+          </div>
+          {{ comment_form.media }}
+          <button type="submit" class="btn btn-primary">Вiдправити</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Правая часть: комментарии -->
+    <div class="col-md-6 d-flex flex-column ">
+      <div class="comments p-3 border rounded bg-dark text-light" style="background: #f8f9fa; max-height: 550px; overflow-y: auto;">
+        <h3>Koмeнтaрi</h3>
+        {% for comment in branch.comments.all %}
+          <div class="comment mb-2 p-2 border rounded bg-dark text-light" style="background: #ffffff;">
+            <strong>{{ comment.author.username }}</strong>
+            <p>{{ comment.content }}</p>
+            {% if comment.media %}
+              <div class="comment-media">
+                {% if comment.media.url|endswith:".jpg" or comment.media.url|endswith:".png" or comment.media.url|endswith:".jpeg" %}
+                    <img src="{{ comment.media.url }}" alt="Изображение комментария" style="max-width: 100%; height: auto;">
+                {% elif comment.media.url|endswith:".mp4" %}
+                    <video width="100%" controls>
+                        <source src="{{ comment.media.url }}" type="video/mp4">
+                        Ваш браузер не поддерживает тег video.
+                    </video>
+                {% else %}
+                  <a href="{{ comment.media.url }}">Скачать файл</a>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p>Коментарі відсутні.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
