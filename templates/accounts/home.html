@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Головна сторінка</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
+
     <header>
         {% if user.is_authenticated %}
             <h1>Привіт, {{ user.username }}!</h1>
@@ -27,6 +23,11 @@
                             <button>Перейти до акаунту</button>
                         </a>
                     </li>
+                    <li>
+                        <a href="{% url 'forum:branch_list' %}">
+                            <button>Форум</button>
+                        </a>
+                    </li>
                 </ul>
             {% else %}
                 <ul>
@@ -44,8 +45,4 @@
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Всі права захищено</p>
-    </footer>
-</body>
-</html>
+{% endblock %}
