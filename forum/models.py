@@ -19,7 +19,7 @@ class Comment(models.Model):
     media = models.FileField(upload_to="comments_media/", blank=True, null=True)
 
     def get_absolute_url(self):
-        return self.task.get_absolute_url()
+        return self.branch.get_absolute_url()
 
 
 
