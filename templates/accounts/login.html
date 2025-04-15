@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вхід</title>
-</head>
-<body>
+{% extends 'base/base.html' %}
+
+{% block content %}
+
     <header>
         <h1>Вхід до акаунту</h1>
     </header>
@@ -19,8 +15,4 @@
         <p>Ще не маєте акаунту? <a href="{% url 'accounts:register' %}">Зареєструйтеся</a></p>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Всі права захищено</p>
-    </footer>
-</body>
-</html>
+{% endblock %}
