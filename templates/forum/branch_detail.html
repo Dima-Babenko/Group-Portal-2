@@ -1,9 +1,9 @@
 {% extends 'base/base.html' %}
 
-{% block content %}
 {% load custom_filters %}
 {% load custom_tags %}
 
+{% block content %}
 <div class="container mt-3">
   <div class="row">
     <!-- Левая часть: задание и форма добавления комментариев -->
@@ -13,7 +13,7 @@
       <p>{{ branch.body }}</p>
       <div class="d-flex">
         <a href="{% url 'forum:branch_update' branch.id %}" class="btn btn-outline-warning me-2">Редагувати</a>
-        <a href="{% url 'forum:branch_delete' branch.id %}" class="btn btn-outline-danger">Bидaлити</a>
+        <a href="{% url 'forum:branch_delete' branch.id %}" class="btn btn-outline-danger">Видалити</a>
       </div>
 
       <!-- Форма добавления комментария -->
@@ -21,35 +21,48 @@
         <h4>Додати коментар</h4>
         <form action="{% url 'forum:branch_detail' branch.id %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
-          <div class="form-group bg-dark text-light">
+          <div class="form-group">
             <label for="id_content">Коментар:</label>
-            <textarea name="content" id="id_content" class="form-control" rows="3" style="max-height: 100px; overflow-y: auto;"></textarea>
+            <textarea name="content" id="id_content" class="form-control text-light " rows="3"
+                      style="max-height: 100px; overflow-y: auto;"></textarea>
           </div>
           {{ comment_form.media }}
-          <button type="submit" class="btn btn-primary">Вiдправити</button>
+          <button type="submit" class="btn btn-primary mt-2">Відправити</button>
         </form>
       </div>
     </div>
 
     <!-- Правая часть: комментарии -->
-    <div class="col-md-6 d-flex flex-column ">
-      <div class="comments p-3 border rounded bg-dark text-light" style="background: #f8f9fa; max-height: 550px; overflow-y: auto;">
-        <h3>Koмeнтaрi</h3>
+    <div class="col-md-6 d-flex flex-column">
+      <div class="comments p-3 border rounded bg-dark" style="background: #f8f9fa; max-height: 550px; overflow-y: auto;">
+        <h3>Коментарі</h3>
         {% for comment in branch.comments.all %}
           <div class="comment mb-2 p-2 border rounded bg-dark text-light" style="background: #ffffff;">
-            <strong>{{ comment.author.username }}</strong>
-            <p>{{ comment.content }}</p>
+            <div class="d-flex align-items-center mb-2">
+              {% if comment.author.avatar %}
+                <img src="{{ comment.author.avatar.url }}" alt="Аватар" class="rounded-circle me-2" style="width: 50px; height: 50px; object-fit: cover;">
+              {% endif %}
+              <strong class="text-light">{{ comment.author.username }}</strong>
+            </div>
+
+            <p class="text-light">{{ comment.content }}</p>
+
             {% if comment.media %}
-              <div class="comment-media">
-                {% if comment.media.url|endswith:".jpg" or comment.media.url|endswith:".png" or comment.media.url|endswith:".jpeg" %}
-                    <img src="{{ comment.media.url }}" alt="Изображение комментария" style="max-width: 100%; height: auto;">
-                {% elif comment.media.url|endswith:".mp4" %}
-                    <video width="100%" controls>
-                        <source src="{{ comment.media.url }}" type="video/mp4">
-                        Ваш браузер не поддерживает тег video.
-                    </video>
+              <div class="comment-media mt-2">
+                {% if comment.media.url|lower|endswith:".jpg" or comment.media.url|lower|endswith:".jpeg" or comment.media.url|lower|endswith:".png" or comment.media.url|lower|endswith:".gif" %}
+                <img src="{{ comment.media.url }}" alt="Зображення коментаря" style="max-width: 100%; height: auto;">
+                {% elif comment.media.url|lower|endswith:".mp4" %}
+                  <video width="100%" controls>
+                    <source src="{{ comment.media.url }}" type="video/mp4">
+                    Ваш браузер не підтримує тег video.
+                  </video>
+                {% elif comment.media.url|lower|endswith:".mp3" or comment.media.url|lower|endswith:".wav" %}
+                  <audio controls style="width: 100%;">
+                    <source src="{{ comment.media.url }}">
+                    Ваш браузер не підтримує аудіо елемент.
+                  </audio>
                 {% else %}
-                  <a href="{{ comment.media.url }}">Скачать файл</a>
+                  <a href="{{ comment.media.url }}" download>Скачати файл</a>
                 {% endif %}
               </div>
             {% endif %}
@@ -61,5 +74,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
