@@ -1,0 +1,20 @@
+<h1>Список голосувань</h1>
+<ul>
+  {% for voting in votings %}
+    <li>
+      <a href="{% url 'voting:voting_detail' voting.id %}">{{ voting.question }}</a>
+      | <a href="{% url 'voting:voting_results' voting.id %}">Результати</a>
+
+      {% if user.role == 'admin' %}
+        <form method="post" action="{% url 'voting:delete_voting' voting.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" onclick="return confirm('Точно видалити це голосування?')">🗑 Видалити</button>
+        </form>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+
+{% if user.role in 'moderator admin' %}
+  <a href="{% url 'voting:create_voting' %}">Створити голосування</a>
+{% endif %}

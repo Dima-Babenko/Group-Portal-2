@@ -1,0 +1,17 @@
+<h2>{{ voting.question }}</h2>
+
+{% if vote %}
+  <p>Ви вже голосували. Можете переголосувати:</p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+  {% for option in voting.options.all %}
+    <label>
+      <input type="radio" name="option" value="{{ option.id }}"
+             {% if vote and vote.option.id == option.id %}checked{% endif %}>
+      {{ option.text }}
+    </label><br>
+  {% endfor %}
+  <button type="submit">Проголосувати</button>
+</form>
