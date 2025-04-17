@@ -1,3 +1,7 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
 <h1>Список голосувань</h1>
 <ul>
   {% for voting in votings %}
@@ -18,3 +22,5 @@
 {% if user.role in 'moderator admin' %}
   <a href="{% url 'voting:create_voting' %}">Створити голосування</a>
 {% endif %}
+
+{% endblock %}

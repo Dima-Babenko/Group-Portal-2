@@ -22,7 +22,6 @@ class Comment(models.Model):
         return self.branch.get_absolute_url()
 
 
-
 class Like(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="liked_comments")

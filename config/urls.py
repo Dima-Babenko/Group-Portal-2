@@ -9,7 +9,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', views.home_view, name='home'),
     path('', include('forum.urls', namespace='forum')),
-    #path('accounts/', include('accounts.urls', namespace="accounts")),
+    path('voting/', include(('voting.urls', 'voting'), namespace='voting')),
 ]
 
 if settings.DEBUG:

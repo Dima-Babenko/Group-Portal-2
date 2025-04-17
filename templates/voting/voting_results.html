@@ -1,3 +1,7 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
 <h2>Результати: {{ voting.question }}</h2>
 
 <p>Загальна кількість голосів: {{ total_votes }}</p>
@@ -9,3 +13,5 @@
 </ul>
 
 <a href="{% url 'voting:voting_list' %}">← Назад до списку</a>
+
+{% endblock %}
