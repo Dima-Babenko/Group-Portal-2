@@ -1,32 +1,35 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import User
 
 class Poll(models.Model):
-
-    question = models.CharField(max_length=256)
-
-    def __str__(self):
-        return self.question
-
-
-class PollOption(models.Model):
-
-    poll = models.ForeignKey(Poll, related_name="options", on_delete=models.CASCADE)
-    option_text = models.CharField(max_length=256)
+    title = models.CharField(max_length=256)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.option_text
+        return self.title
 
+class Question(models.Model):
+    poll = models.ForeignKey(Poll, related_name='questions', on_delete=models.CASCADE)
+    text = models.CharField(max_length=512)
 
-class PollAnswer(models.Model):
+    def __str__(self):
+        return self.text
 
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+class Option(models.Model):
+    question = models.ForeignKey(Question, related_name='options', on_delete=models.CASCADE, null=True)
+    text = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.text
+
+class Answer(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    selected_option = models.ForeignKey(PollOption, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    selected_option = models.ForeignKey(Option, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('poll', 'user')
+        unique_together = ('user', 'question')
 
     def __str__(self):
-        return f'{self.user.username} вiдповiв на "{self.poll.question}"'
+        return f'{self.user.username} answered {self.question.text}'

@@ -28,12 +28,21 @@
                             <button>Форум</button>
                         </a>
                     </li>
+                    <li>
+                        <a href="{% url 'voting:voting_list' %}">
+                            <button>Голосування</button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'polls:poll_list' %}">
+                            <button>Опитування</button>
+                        </a>
+                    </li>
                 </ul>
             {% else %}
                 <ul>
                     <li><a href="{% url 'accounts:login' %}">Увійти</a></li>
                     <li><a href="{% url 'accounts:register' %}">Зареєструватися</a></li>
-                    <li><a href="{% url 'forum:branch_list' %}">Форум</a></li>
                 </ul>
             {% endif %}
         </nav>
