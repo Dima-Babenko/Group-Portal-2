@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'forum',
     'accounts',
+    'portfolio',
 
     'widget_tweaks',
 ]
