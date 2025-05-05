@@ -2,48 +2,57 @@
 
 {% block content %}
 
-    <header>
+<header>
+    {% if user.is_authenticated %}
+        <h1>Привіт, {{ user.username }}!</h1>
+    {% else %}
+        <h1>Вітаємо на головній сторінці</h1>
+    {% endif %}
+
+    <nav>
         {% if user.is_authenticated %}
-            <h1>Привіт, {{ user.username }}!</h1>
+            <ul>
+                <li>
+                    <form method="post" action="{% url 'accounts:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Вийти</button>
+                    </form>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:user-profile' username=user.username %}">
+                        <button>Перейти до акаунту</button>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'forum:branch_list' %}">
+                        <button>Форум</button>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'gallery:gallery_view' %}">
+                        <button>Галерея</button>
+                    </a>
+                </li>
+            </ul>
         {% else %}
-            <h1>Вітаємо на головній сторінці</h1>
+            <ul>
+                <li><a href="{% url 'accounts:login' %}">Увійти</a></li>
+                <li><a href="{% url 'accounts:register' %}">Зареєструватися</a></li>
+                <li><a href="{% url 'forum:branch_list' %}">Форум</a></li>
+                <li><a href="{% url 'gallery:media_list' %}">
+                    Галерея
+                </a></li>
+            </ul>
         {% endif %}
+    </nav>
+</header>
 
-        <nav>
-            {% if user.is_authenticated %}
-                <ul>
-                    <li>
-                        <form method="post" action="{% url 'accounts:logout' %}">
-                            {% csrf_token %}
-                            <button type="submit">Вийти</button>
-                        </form>
-                    </li>
-                    <li>
-                        <a href="{% url 'accounts:user-profile' username=user.username %}">
-                            <button>Перейти до акаунту</button>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'forum:branch_list' %}">
-                            <button>Форум</button>
-                        </a>
-                    </li>
-                </ul>
-            {% else %}
-                <ul>
-                    <li><a href="{% url 'accounts:login' %}">Увійти</a></li>
-                    <li><a href="{% url 'accounts:register' %}">Зареєструватися</a></li>
-                    <li><a href="{% url 'forum:branch_list' %}">Форум</a></li>
-                </ul>
-            {% endif %}
-        </nav>
-    </header>
-
-    <main>
-        <section>
-            <h2>Ось де можна знайти корисну інформацію!</h2>
-            <p>Це головна сторінка, де можна дізнатися останні новини.</p>
-        </section>
-    </main>
+<main>
+    <section>
+        <h2>Ось де можна знайти корисну інформацію!</h2>
+        <p>Це головна сторінка, де можна дізнатися останні новини.</p>
+    </section>
+</main>
 
 {% endblock %}
+
