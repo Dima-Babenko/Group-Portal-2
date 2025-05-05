@@ -21,3 +21,7 @@ class CommentForm(forms.ModelForm):
         widgets = {
             "media": forms.FileInput()
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].required = False

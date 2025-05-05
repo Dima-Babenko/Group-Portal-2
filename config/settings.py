@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'polls',
     'accounts',
     'diary',
+    'portfolio',
 
     'widget_tweaks',
 ]

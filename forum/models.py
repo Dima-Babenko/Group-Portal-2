@@ -17,6 +17,7 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     media = models.FileField(upload_to="comments_media/", blank=True, null=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
 
     def get_absolute_url(self):
         return self.branch.get_absolute_url()
