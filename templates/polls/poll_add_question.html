@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<h2>Додати питання до: {{ poll.title }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+        <label>Текст питання:</label>
+        <input type="text" name="text">
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <button type="submit">Додати питання</button>
+</form>
+
+{% endblock %}

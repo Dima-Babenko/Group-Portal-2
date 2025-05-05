@@ -1,0 +1,108 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розклад та оцінки учня</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Розклад та оцінки учня: {{ student.user.username }}</h2>
+
+    <!-- Розклад -->
+    <h4>Розклад на тиждень</h4>
+    {% if schedule_by_day %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>День тижня</th>
+                    <th>Час</th>
+                    <th class="subject-column">Предмет</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day, items in schedule_by_day.items %}
+                    <tr>
+                        <td colspan="3"><strong>{{ day }}</strong></td>
+                    </tr>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.day_of_week }}</td>
+                            <td>{{ item.time }}</td>
+                            <td>{{ item.subject.name }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Немає даних для відображення.</p>
+    {% endif %}
+
+    <!-- Оцінки -->
+    <h4>Оцінки учня</h4>
+    {% if grades_by_day_subject %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="day-column">День тижня</th>
+                    {% for day in grades_by_day_subject %}
+                        <th class="subject-column">{{ day }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject, subject_grades in grades_by_day_subject.items %}
+                    <tr>
+                        <td><strong>{{ subject }}</strong></td>
+                        {% for day in grades_by_day_subject %}
+                            <td class="grade-column">
+                                {% for grade_day, grades in subject_grades.items %}
+                                    {% if grade_day == day %}
+                                        {% if grades %}
+                                            {{ grades|join:", "|default:"Немає оцінок" }}
+                                        {% else %}
+                                            <span class="no-grade">Немає оцінок</span>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Немає даних для відображення.</p>
+    {% endif %}
+
+    <!-- Середні оцінки -->
+    <h4>Середній бал по кожному предмету:</h4>
+    {% if subject_averages %}
+        <ul>
+            {% for subject, avg in subject_averages.items %}
+                <li><span class="average-score">{{ subject }}: {{ avg|floatformat:2 }}</span></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Немає середніх оцінок.</p>
+    {% endif %}
+
+    <!-- Загальний середній бал -->
+    <h4>Загальний середній бал:</h4>
+    <p class="average-score">{{ total_average|floatformat:2 }}</p>
+
+</div>
+
+<div class="footer">
+    © 2024 Company, Inc
+</div>
+
+</body>
+
+{% endblock %}
