@@ -1,63 +1,78 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+  <div class="text-center mb-5">
+    <h1>
+      {% if user.is_authenticated %}
+        👾 Привіт, {{ user.username }}!
+      {% else %}
+        🔮 Вітаємо на головній сторінці Кіберпорталу!
+      {% endif %}
+    </h1>
+    <p class="lead mt-3">Занурюйся у цифровий всесвіт з нами!</p>
+  </div>
 
-    <header>
-        {% if user.is_authenticated %}
-            <h1>Привіт, {{ user.username }}!</h1>
-        {% else %}
-            <h1>Вітаємо на головній сторінці</h1>
-        {% endif %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="col">
+      <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-comments"></i> Форум</h5>
+          <p class="card-text">Обговорюй теми, ділись ідеями й приєднуйся до спільноти.</p>
+          <a href="{% url 'forum:branch_list' %}" class="btn btn-cyber">Перейти</a>
+        </div>
+      </div>
+    </div>
 
-        <nav>
-            {% if user.is_authenticated %}
-                <ul>
-                    <li>
-                        <form method="post" action="{% url 'accounts:logout' %}">
-                            {% csrf_token %}
-                            <button type="submit">Вийти</button>
-                        </form>
-                    </li>
-                    <li>
-                        <a href="{% url 'accounts:user-profile' username=user.username %}">
-                            <button>Перейти до акаунту</button>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'forum:branch_list' %}">
-                            <button>Форум</button>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'voting:voting_list' %}">
-                            <button>Голосування</button>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'polls:poll_list' %}">
-                            <button>Опитування</button>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'diary:schedule_with_grades' %}">
-                            <button>Щоденник</button>
-                        </a>
-                    </li>
-                </ul>
-            {% else %}
-                <ul>
-                    <li><a href="{% url 'accounts:login' %}">Увійти</a></li>
-                    <li><a href="{% url 'accounts:register' %}">Зареєструватися</a></li>
-                </ul>
-            {% endif %}
-        </nav>
-    </header>
+    <div class="col">
+      <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-vote-yea"></i> Голосування</h5>
+          <p class="card-text">Висловлюй свою думку в актуальних голосуваннях.</p>
+          <a href="{% url 'voting:voting_list' %}" class="btn btn-cyber">Голосувати</a>
+        </div>
+      </div>
+    </div>
 
-    <main>
-        <section>
-            <h2>Ось де можна знайти корисну інформацію!</h2>
-            <p>Це головна сторінка, де можна дізнатися останні новини.</p>
-        </section>
-    </main>
+    <div class="col">
+      <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-poll"></i> Опитування</h5>
+          <p class="card-text">Пройди креативні опитування і поділись своєю думкою!</p>
+          <a href="{% url 'polls:poll_list' %}" class="btn btn-cyber">Пройти</a>
+        </div>
+      </div>
+    </div>
 
+    {% if user.is_authenticated %}
+      <div class="col">
+        <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-user-graduate"></i> Щоденник</h5>
+            <p class="card-text">Перевір розклад, оцінки та домашні завдання.</p>
+            <a href="{% url 'diary:schedule_with_grades' %}" class="btn btn-cyber">Відкрити</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-briefcase"></i> Портфоліо</h5>
+            <p class="card-text">Переглянь свої проєкти, досягнення й завантаження.</p>
+            <a href="{% url 'portfolio:project_list' %}" class="btn btn-cyber">Моє портфоліо</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-user-circle"></i> Мій акаунт</h5>
+            <p class="card-text">Налаштування профілю, зміна паролю й вихід.</p>
+            <a href="{% url 'accounts:user-profile' user.username %}" class="btn btn-cyber">Перейти</a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}
