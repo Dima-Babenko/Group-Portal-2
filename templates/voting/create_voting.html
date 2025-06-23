@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<h2>Створити голосування</h2>
+
+<form method="post">
+  {% csrf_token %}
+
+  <label>Питання:</label><br>
+  <input type="text" name="question"><br><br>
+
+  <label>Варіанти відповіді:</label><br>
+  <div id="options-container">
+    <!-- Стартовий варіант -->
+    <div class="option-input">
+      <input type="text" name="options">
+      <button type="button" onclick="removeOption(this)">✖</button>
+    </div>
+  </div>
+
+  <button type="button" onclick="addOption()">Додати ще варіант</button><br><br>
+
+  <button type="submit">Створити</button>
+</form>
+
+<script>
+  function addOption() {
+    const container = document.getElementById('options-container');
+
+    const div = document.createElement('div');
+    div.className = 'option-input';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'options';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.innerText = '✖';
+    removeBtn.onclick = function () {
+      removeOption(removeBtn);
+    };
+
+    div.appendChild(input);
+    div.appendChild(removeBtn);
+    container.appendChild(div);
+  }
+
+  function removeOption(button) {
+    const div = button.parentElement;
+    div.remove();
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<head>
+    <title>{{ poll.title }}</title> <!-- Виправлено тут -->
+</head>
+<body>
+    <h1>{{ poll.title }}</h1> <!-- Виправлено тут -->
+    <form method="POST">
+        {% csrf_token %}
+        <ul>
+            {% for question in poll.questions.all %}
+                <li>
+                    <p>{{ question.text }}</p>
+                    {% for option in question.options.all %}
+                        <label>
+                            <input type="radio" name="question_{{ question.id }}" value="{{ option.id }}">
+                            {{ option.text }}
+                        </label><br>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Відправити відповіді</button>
+    </form>
+    <a href="{% url 'polls:poll_list' %}">Назад до списку</a>
+
+{% endblock %}

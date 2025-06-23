@@ -1,0 +1,133 @@
+{% extends 'base/base.html' %}
+
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="container mt-3">
+  <div class="row">
+    <!-- Левая часть: задание и форма добавления комментариев -->
+    <div class="col-md-6 d-flex flex-column">
+      <!-- Задание -->
+      <h2>{{ branch.title }}</h2>
+      <p>{{ branch.body }}</p>
+      <div class="d-flex">
+        <a href="{% url 'forum:branch_update' branch.id %}" class="btn btn-outline-warning me-2">Редагувати</a>
+        <a href="{% url 'forum:branch_delete' branch.id %}" class="btn btn-outline-danger">Видалити</a>
+      </div>
+
+      <!-- Форма добавления комментария -->
+      <div class="add-comment mt-4 p-3 border rounded bg-dark text-light" style="background: #f8f9fa;">
+        <h4>Додати коментар</h4>
+        <form action="{% url 'forum:add_comment' branch.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="parent_id" id="parent-id-input"> <!-- 👈 для ответов -->
+          <div class="form-group">
+            <label for="id_content">Коментар:</label>
+            <textarea name="content" id="id_content" class="form-control text-light" rows="3"
+                      style="max-height: 100px; overflow-y: auto;"></textarea>
+          </div>
+          {{ comment_form.media }}
+          <button type="submit" class="btn btn-primary mt-2">Відправити</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Правая часть: комментарии -->
+    <div class="col-md-6 d-flex flex-column">
+      <div class="comments p-3 border rounded bg-dark text-light" style="max-height: 550px; overflow-y: auto;">
+        <h3>Коментарі</h3>
+        {% for comment in branch.comments.all %}
+          {% if not comment.parent %}
+            <div class="comment mb-2 p-2 border rounded bg-dark text-light">
+              <div class="d-flex align-items-center mb-2">
+                {% if comment.author.avatar %}
+                  <img src="{{ comment.author.avatar.url }}" alt="Аватар"
+                       class="rounded-circle me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                {% endif %}
+                <strong>{{ comment.author.username }}</strong>
+              </div>
+
+              <p>{{ comment.content }}</p>
+
+              {% if comment.media %}
+                <div class="comment-media mt-2">
+                  {% if comment.media.url|lower|endswith:".jpg" or comment.media.url|lower|endswith:".jpeg" or comment.media.url|lower|endswith:".png" or comment.media.url|lower|endswith:".gif" %}
+                    <img src="{{ comment.media.url }}" alt="Зображення коментаря" style="max-width: 100%; height: auto;">
+                  {% elif comment.media.url|lower|endswith:".mp4" %}
+                    <video width="100%" controls>
+                      <source src="{{ comment.media.url }}" type="video/mp4">
+                      Ваш браузер не підтримує тег video.
+                    </video>
+                  {% elif comment.media.url|lower|endswith:".mp3" or comment.media.url|lower|endswith:".wav" %}
+                    <audio controls style="width: 100%;">
+                      <source src="{{ comment.media.url }}">
+                      Ваш браузер не підтримує аудіо елемент.
+                    </audio>
+                  {% else %}
+                    <a href="{{ comment.media.url }}" download>Скачати файл</a>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              <button class="btn btn-sm btn-outline-secondary reply-btn mt-2" data-id="{{ comment.id }}">↩️ Відповісти</button>
+
+              {% if comment.author == request.user %}
+                <div class="mt-2">
+                  <form method="post" action="{% url 'forum:comment_delete' comment.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
+                  </form>
+                </div>
+              {% endif %}
+
+              <!-- Ответы -->
+              {% for reply in comment.replies.all %}
+                <div class="mt-3 ms-4 border-start ps-3">
+                  <strong>{{ reply.author.username }}</strong>
+                  <p>{{ reply.content }}</p>
+                  {% if reply.media %}
+                    <div class="comment-media mt-2">
+                      {% if reply.media.url|lower|endswith:".jpg" or reply.media.url|lower|endswith:".jpeg" or reply.media.url|lower|endswith:".png" or reply.media.url|lower|endswith:".gif" %}
+                        <img src="{{ reply.media.url }}" alt="Зображення" style="max-width: 100%; height: auto;">
+                      {% elif reply.media.url|lower|endswith:".mp4" %}
+                        <video width="100%" controls>
+                          <source src="{{ reply.media.url }}" type="video/mp4">
+                        </video>
+                      {% elif reply.media.url|lower|endswith:".mp3" or reply.media.url|lower|endswith:".wav" %}
+                        <audio controls style="width: 100%;">
+                          <source src="{{ reply.media.url }}">
+                        </audio>
+                      {% else %}
+                        <a href="{{ reply.media.url }}" download>Скачати файл</a>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {% if reply.author == request.user %}
+                    <form method="post" action="{% url 'forum:comment_delete' reply.id %}" style="display:inline;">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
+                    </form>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% empty %}
+          <p>Коментарі відсутні.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.reply-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const commentId = this.getAttribute('data-id');
+      document.getElementById('parent-id-input').value = commentId;
+      document.getElementById('id_content').focus();
+    });
+  });
+</script>
+{% endblock %}

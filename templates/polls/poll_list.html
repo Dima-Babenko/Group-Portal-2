@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    {% if user.is_authenticated and user.is_superuser %}
+        <p>
+            <a href="{% url 'polls:poll_create' %}">Створити нове опитування</a>
+        </p>
+    {% endif %}
+
+    <ul>
+        {% for poll in polls %}
+            <li>
+                <strong>{{ poll.title }}</strong>
+                {% if poll.has_responded %}
+                    <span>(Ви вже пройшли це опитування)</span>
+                {% else %}
+                    <a href="{% url 'polls:poll_detail' poll.pk %}">Пройти опитування</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

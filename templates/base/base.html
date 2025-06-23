@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Кіберпортал{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #0d0d0f;
+      color: #f2f2f2;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #1a0033, #0e0e1f);
+      border-bottom: 2px solid #ff00cc;
+      box-shadow: 0 2px 15px #ff00cc;
+    }
+
+    .navbar-brand, .nav-link {
+      color: #00ffe1 !important;
+      font-size: 1.3rem;
+      text-shadow: 0 0 5px #00ffe1;
+    }
+
+    .nav-link:hover {
+      color: #ff00cc !important;
+      text-shadow: 0 0 8px #ff00cc;
+    }
+
+    .menu-toggle {
+      font-size: 2rem;
+      cursor: pointer;
+      color: #00ffe1;
+      background: none;
+      border: none;
+      text-shadow: 0 0 10px #00ffe1;
+    }
+
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: rgba(10, 0, 30, 0.98);
+      overflow-x: hidden;
+      transition: width 0.4s ease;
+      padding-top: 60px;
+      z-index: 2000;
+      box-shadow: 4px 0 20px #ff00cc;
+    }
+
+    .sidebar a, .sidebar form button {
+      padding: 15px 24px;
+      font-size: 18px;
+      color: #f2f2f2;
+      display: block;
+      border: none;
+      background: none;
+      text-align: left;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover, .sidebar form button:hover {
+      color: #0d0d0f;
+      background-color: #00ffe1;
+      box-shadow: inset 0 0 15px #00ffe1;
+    }
+
+    .sidebar .active {
+      background-color: #ff00cc;
+      color: #0d0d0f;
+      box-shadow: inset 0 0 15px #ff00cc;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 36px;
+      color: #ffffff;
+      background: none;
+      border: none;
+      text-shadow: 0 0 10px #ff00cc;
+    }
+
+    .content {
+      transition: margin-left 0.3s;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      flex: 1;
+    }
+
+    footer {
+      background: linear-gradient(90deg, #1a0033, #0e0e1f);
+      color: #ccc;
+      padding: 1rem;
+      text-align: center;
+      border-top: 2px solid #00ffe1;
+      box-shadow: 0 -2px 15px #00ffe1;
+    }
+
+    button:focus, a:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #ff00cc;
+    }
+
+    h1, h2, h3 {
+      color: #00ffe1;
+      text-shadow: 0 0 10px #00ffe1;
+    }
+
+    .btn-cyber {
+      background: #ff00cc;
+      border: none;
+      color: #fff;
+      text-shadow: 0 0 5px #fff;
+      box-shadow: 0 0 15px #ff00cc;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn-cyber:hover {
+      background: #00ffe1;
+      box-shadow: 0 0 25px #00ffe1;
+      color: #0d0d0f;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Верхня панель -->
+<nav class="navbar navbar-dark">
+  <div class="container-fluid">
+    <button class="menu-toggle" onclick="openNav()">☰</button>
+    <a class="navbar-brand ms-3" href="/">💾 Кіберпортал</a>
+  </div>
+</nav>
+
+<!-- Бокове меню -->
+<div id="mySidebar" class="sidebar">
+  <button class="close-btn" onclick="closeNav()">&times;</button>
+
+  {% if user.is_authenticated %}
+    <form method="post" action="{% url 'accounts:logout' %}">
+      {% csrf_token %}
+      <button type="submit">Вийти</button>
+    </form>
+    <a href="{% url 'accounts:user-profile' username=user.username %}" class="btn btn-cyber">Мій профіль</a>
+    <a href="{% url 'forum:branch_list' %}" class="btn btn-cyber">Форум</a>
+    <a href="{% url 'voting:voting_list' %}" class="btn btn-cyber">Голосування</a>
+    <a href="{% url 'polls:poll_list' %}" class="btn btn-cyber">Опитування</a>
+    <a href="{% url 'portfolio:project_list' %}" class="btn btn-cyber">Моє портфоліо</a>
+    <a href="{% url 'diary:schedule_with_grades' %}" class="btn btn-cyber">Щоденник</a>
+  {% else %}
+    <a href="{% url 'accounts:login' %}" class="{% if request.path == '/accounts/login/' %}active{% endif %}">Увійти</a>
+    <a href="{% url 'accounts:register' %}" class="{% if request.path == '/accounts/register/' %}active{% endif %}">Зареєструватися</a>
+  {% endif %}
+</div>
+
+<!-- Контент -->
+<main class="content container">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- Футер -->
+<footer>
+  <p>&copy; 2025 Кіберпортал | Розроблено у неоновому майбутньому ⚡</p>
+</footer>
+
+<!-- JS -->
+<script>
+  function openNav() {
+    document.getElementById("mySidebar").style.width = "260px";
+  }
+
+  function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

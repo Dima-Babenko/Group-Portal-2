@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<h2>Додати варіанти відповіді до питання: {{ question.text }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Текст варіанту:</label>
+    <input type="text" name="text">
+    <br>
+    <button type="submit" name="add_another_option">Додати ще варіант</button>
+    <button type="submit" name="add_another_question">Додати інше питання</button>
+</form>
+
+{% endblock %}

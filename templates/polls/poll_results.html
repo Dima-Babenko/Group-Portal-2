@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>Результати опитування: {{ poll.title }}</h1>
+
+    <ul>
+        {% for answer in answers %}
+            <li><strong>{{ answer.question }}</strong>: {{ answer.selected_option }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'polls:poll_list' %}">Повернутися до списку опитувань</a>
+
+{% endblock %}

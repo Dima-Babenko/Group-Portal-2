@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<h2>Результати: {{ voting.question }}</h2>
+
+<p>Загальна кількість голосів: {{ total_votes }}</p>
+
+<ul>
+  {% for option, count, percent in results %}
+    <li>{{ option }} — {{ count }} голосів ({{ percent|floatformat:2 }}%)</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'voting:voting_list' %}">← Назад до списку</a>
+
+{% endblock %}
