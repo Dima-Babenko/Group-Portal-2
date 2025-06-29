@@ -1,0 +1,36 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Редагувати медіа</h2>
+
+    <form method="post" enctype="multipart/form-data" class="card p-4">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="id_title" class="form-label">Назва</label>
+            {{ form.title }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_media_type" class="form-label">Тип медіа</label>
+            {{ form.media_type }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_file" class="form-label">Файл (зображення)</label>
+            {{ form.file }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_url" class="form-label">Посилання (YouTube)</label>
+            {{ form.url }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Оновити</button>
+        <a href="{% url 'gallery:gallery_view' %}" class="btn btn-secondary">Скасувати</a>
+    </form>
+</div>
+{% endblock %}
+/a>
