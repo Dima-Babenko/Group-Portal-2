@@ -16,6 +16,8 @@ class BranchListView(ListView):
     model = models.Branch
     context_object_name = "branches"
     template_name = "tasks/branch_list.html"
+    paginate_by = 6
+    ordering = ['-created_at']
 
 
 class BranchDetailView(DetailView):

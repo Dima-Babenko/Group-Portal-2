@@ -1,80 +1,67 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="container mt-3">
-  <h2 class="text-center" >Список гiлок форуму</h2>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Список гілок форуму</h2>
 
-  <div class="text-center mb-3">
-    <a href="{% url 'forum:branch_create' %}" class="btn btn-primary mb-3"
-    style="height: 50px; line-height: 35px; font-size: 18px;">Додати завдання</a>
+  <div class="text-center mb-4">
+    <a href="{% url 'forum:branch_create' %}" class="btn btn-primary" style="font-size: 18px;">
+      ➕ Створити нову гілку
+    </a>
   </div>
 
-  <br>
-</div>
-
-
-<div class="carousel-container">
-  <div class="carousel-track">
-    {% for branch in branches %}
-      <div class="card bg-light shadow bg-dark text-light" style="min-width: 550px; height: 350px;">
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title border p-2 mb-3">
-            <p class="text-decoration-none">{{ branch.title }}</p>
-          </h5>
-          <a href="{% url 'forum:branch_detail' branch.pk %}" class="btn btn-primary btn-sm w-100 mt-auto"
-             style="height: 50px; line-height: 40px; font-size: 18px;">
-            <p>Перейти до гілки</p>
-          </a>
+  {% if branches %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for branch in branches %}
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ branch.title }}</h5>
+              <p class="card-text text-muted mb-1">Автор: {{ branch.creator.username }}</p>
+              <p class="card-text mb-3">Створено: {{ branch.created_at|date:"d.m.Y H:i" }}</p>
+              <a href="{% url 'forum:branch_detail' branch.pk %}" class="btn btn-primary mt-auto">
+                Перейти до гілки
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    {% endfor %}
-  </div>
+      {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% if is_paginated %}
+      <nav class="mt-5 d-flex justify-content-center">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1">&laquo; Перша</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">← Назад</a>
+            </li>
+          {% endif %}
+
+          <li class="page-item active">
+            <span class="page-link">
+              Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}
+            </span>
+          </li>
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед →</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Остання &raquo;</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <p class="text-center">Наразі гілки відсутні.</p>
+  {% endif %}
 </div>
-
-<style>
-  .task-container {
-    white-space: nowrap;
-    overflow-x: auto;
-    padding-bottom: 10px;
-  }
-
-  .task-container::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .task-container::-webkit-scrollbar-thumb {
-    background-color: #007bff;
-    border-radius: 4px;
-  }
-</style>
-
-  <style>
-  .carousel-container {
-    display: flex;
-    overflow-x: auto; /* Позволяет пользователю скроллить */
-    scroll-snap-type: x mandatory; /* Фиксирует карточки */
-    gap: 15px;
-    padding-bottom: 10px;
-  }
-
-  .carousel-track {
-    display: flex;
-    gap: 15px;
-    white-space: nowrap;
-  }
-
-  .card {
-    flex: 0 0 300px;
-    height: 250px;
-    scroll-snap-align: center; /* Каждая карточка фиксируется по центру */
-  }
-
-  /* Убираем скроллбар на Windows */
-  .carousel-container::-webkit-scrollbar {
-    display: none;
-  }
-</style>
-
 {% endblock %}
