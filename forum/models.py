@@ -6,6 +6,7 @@ class Branch(models.Model):
     title = models.CharField(max_length=256)
     body = models.TextField()
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="branches")
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
