@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'diary',
     'portfolio',
     'gallery',
+    'announcements',
 
     'widget_tweaks',
 ]

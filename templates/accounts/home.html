@@ -73,6 +73,26 @@
           </div>
         </div>
       </div>
+
+      <div class="col">
+        <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-images"></i> Галерея</h5>
+            <p class="card-text">Переглянь фотоальбоми, поділись моментами та враженнями.</p>
+            <a href="{% url 'gallery:gallery_view' %}" class="btn btn-cyber">Галерея</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card bg-dark text-light border border-pink h-100 shadow-lg">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-bullhorn"></i> Оголошення</h5>
+            <p class="card-text">Читайте важливі новини, події та оголошення порталу.</p>
+            <a href="{% url 'announcements:announcement_list' %}" class="btn btn-cyber">Переглянути</a>
+          </div>
+        </div>
+      </div>
     {% endif %}
   </div>
 {% endblock %}

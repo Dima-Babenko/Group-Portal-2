@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h2 class="text-light mb-4">{{ title }}</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Зберегти</button>
+      <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Скасувати</a>
+    </form>
+  </div>
+{% endblock %}

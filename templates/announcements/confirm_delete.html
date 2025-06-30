@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+{% block content %}
+  <div class="container mt-4 text-light">
+    <h2 class="mb-4">Видалити оголошення</h2>
+    <p>Ви дійсно хочете видалити оголошення <strong>{{ announcement.title }}</strong>?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Так, видалити</button>
+      <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Скасувати</a>
+    </form>
+  </div>
+{% endblock %}

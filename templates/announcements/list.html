@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h2 class="text-light text-center mb-4">📢 Оголошення</h2>
+
+    {% if user.is_authenticated %}
+      <div class="mb-3 text-center">
+        <a href="{% url 'announcements:announcement_create' %}" class="btn btn-success">+ Нове оголошення</a>
+      </div>
+    {% endif %}
+
+    {% if announcements %}
+      {% for announcement in announcements %}
+        <div class="card bg-dark text-light border border-secondary mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ announcement.title }}</h5>
+            <p class="card-text">{{ announcement.content }}</p>
+            <small class="text-muted">Автор: {{ announcement.author }} | {{ announcement.created_at|date:"d.m.Y H:i" }}</small>
+            {% if request.user == announcement.author %}
+              <div class="mt-2">
+                <a href="{% url 'announcements:announcement_edit' announcement.pk %}" class="btn btn-warning btn-sm">Редагувати</a>
+                <a href="{% url 'announcements:announcement_delete' announcement.pk %}" class="btn btn-danger btn-sm">Видалити</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-light">Наразі немає оголошень.</p>
+    {% endif %}
+  </div>
+{% endblock %}
